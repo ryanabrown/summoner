@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Summon Creatures</title>
+</head>
+<body>
+<h1>Summon Creatures</h1>
+<label for="creatureType">Select Spell:</label>
+<select id="creatureType">
+  <option value="Fey">Conjure Woodland Beings</option>
+  <option value="Beast">Conjure Animals</option>
+  <option value="Elemental">Conjure Minor Elementals</option>
+</select>
+<br><br>
+<label for="numberOfCreatures">Select Number of Creatures:</label>
+<select id="numberOfCreatures">
+  <option value="1">One creature of challenge rating 2 or lower</option>
+  <option value="2">Two creatures of challenge rating 1 or lower</option>
+  <option value="4">Four creatures of challenge rating 1/2 or lower</option>
+  <option value="8">Eight creatures of challenge rating 1/4 or lower</option>
+</select>
+<br><br>
+<button onclick="summonCreatures()">Summon</button>
+
+<h2>Summoned Creatures:</h2>
+<ul id="summonedResults"></ul>
+
+<script>
+  const creatures = [
+
+    { type: 'Elemental', name: 'Azer', cr: 2 },
+    { type: 'Elemental', name: 'Gargoyle', cr: 2 },
+    { type: 'Elemental', name: 'Galvanice Weird', cr: 1 },
+    { type: 'Elemental', name: 'Giant Strider', cr: 1 },
+    { type: 'Elemental', name: 'Fire Snake', cr: 1 },
+    { type: 'Elemental', name: 'Ice Mephit', cr: 0.5 },
+    { type: 'Elemental', name: 'Magma Mephit', cr: 0.5 },
+    { type: 'Elemental', name: 'Magmin', cr: 0.5 },
+    { type: 'Elemental', name: 'Dust Mephit', cr: 0.5 },
+    { type: 'Elemental', name: 'Firenewt Warrior', cr: 0.5 },
+    { type: 'Elemental', name: 'Mud Mephit', cr: 0.25 },
+    { type: 'Elemental', name: 'Smoke Mephit', cr: 0.25 },
+    { type: 'Elemental', name: 'Steam Mephit', cr: 0.25 },
+    { type: 'Elemental', name: 'Fume Drake', cr: 0.25 },
+    { type: 'Elemental', name: 'Geonid', cr: 0.25 },
+
+    { type: 'Fey', name: 'Meenlock', cr: 2 },
+    { type: 'Fey', name: 'Naiad', cr: 2 },
+    { type: 'Fey', name: 'Nereid', cr: 2 },
+    { type: 'Fey', name: 'Sea Hag', cr: 2 },
+    { type: 'Fey', name: 'Hobgoblin Iron Shadow', cr: 2 },
+    { type: 'Fey', name: 'Satyr Thornbearer', cr: 2 },
+    { type: 'Fey', name: 'Darkling Elder', cr: 2 },
+    { type: 'Fey', name: 'Screaming Devilkin', cr: 1 },
+    { type: 'Fey', name: 'Nilbog', cr: 1 },
+    { type: 'Fey', name: 'Satyr Reveler', cr: 1 },
+    { type: 'Fey', name: 'Quickling', cr: 1 },
+    { type: 'Fey', name: 'Dryad', cr: 1 },
+    { type: 'Fey', name: 'Alseid', cr: 1 },
+    { type: 'Fey', name: 'Satyr', cr: 0.5 },
+    { type: 'Fey', name: 'Reflections', cr: 0.5 },
+    { type: 'Fey', name: 'Wynling', cr: 0.5 },
+    { type: 'Fey', name: 'Valenar Steed', cr: 0.5 },
+    { type: 'Fey', name: 'Valenar Hound', cr: 0.5 },
+    { type: 'Fey', name: 'Darkling', cr: 0.5 },
+    { type: 'Fey', name: 'Blink Dog', cr: 0.25 },
+    { type: 'Fey', name: 'Mite', cr: 0.25 },
+    { type: 'Fey', name: 'Pixie', cr: 0.25 },
+    { type: 'Fey', name: 'Sprite', cr: 0.25 },
+
+    { type: 'Beast', name: 'Allosaurus', cr: 2 },
+    { type: 'Beast', name: 'Cave Bear', cr: 2 },
+    { type: 'Beast', name: 'Aurochs', cr: 2 },
+    { type: 'Beast', name: 'Giant Elk', cr: 2 },
+    { type: 'Beast', name: 'Giant Crayfish', cr: 2 },
+    { type: 'Beast', name: 'Giant Constrictor Snake', cr: 2 },
+    { type: 'Beast', name: 'Giant Boar', cr: 2 },
+    { type: 'Beast', name: 'Saber-Toothed Tiger', cr: 2 },
+    { type: 'Beast', name: 'Rhinoceros', cr: 2 },
+    { type: 'Beast', name: 'Polar Bear', cr: 2 },
+    { type: 'Beast', name: 'Ice Spider Queen', cr: 2 },
+    { type: 'Beast', name: 'Giant Hyena', cr: 1 },
+    { type: 'Beast', name: 'Giant Eagle', cr: 1 },
+    { type: 'Beast', name: 'Dire Wolf', cr: 1 },
+    { type: 'Beast', name: 'Deinonychus', cr: 1 },
+    { type: 'Beast', name: 'Brown Bear', cr: 1 },
+    { type: 'Beast', name: 'Tiger', cr: 1 },
+    { type: 'Beast', name: 'Lion', cr: 1 },
+    { type: 'Beast', name: 'Ice Spider', cr: 1 },
+    { type: 'Beast', name: 'Giant Vulture', cr: 1 },
+    { type: 'Beast', name: 'Giant Toad', cr: 1 },
+    { type: 'Beast', name: 'Giant Spider', cr: 1 },
+    { type: 'Beast', name: 'Jaculi', cr: 0.5 },
+    { type: 'Beast', name: 'Giant Wasp', cr: 0.5 },
+    { type: 'Beast', name: 'Giant Goat', cr: 0.5 },
+    { type: 'Beast', name: 'Giant Dragonfly', cr: 0.5 },
+    { type: 'Beast', name: 'Crocodile', cr: 0.5 },
+    { type: 'Beast', name: 'Black Bear', cr: 0.5 },
+    { type: 'Beast', name: 'Ape', cr: 0.5 },
+    { type: 'Beast', name: 'Wolf', cr: 0.25 },
+    { type: 'Beast', name: 'Velociraptor', cr: 0.25 },
+    { type: 'Beast', name: 'Pteranodon', cr: 0.25 },
+    { type: 'Beast', name: 'Panther', cr: 0.25 },
+    { type: 'Beast', name: 'Giant Wolf Spider', cr: 0.25 },
+    { type: 'Beast', name: 'Giant Snail', cr: 0.25 },
+    { type: 'Beast', name: 'Giant Poisonous Snake', cr: 0.25 },
+    { type: 'Beast', name: 'Giant Owl', cr: 0.25 },
+    { type: 'Beast', name: 'Giant Lizard', cr: 0.25 },
+    { type: 'Beast', name: 'Giant Frog', cr: 0.25 },
+    { type: 'Beast', name: 'Giant Centipede', cr: 0.25 },
+    { type: 'Beast', name: 'Giant Bat', cr: 0.25 },
+    { type: 'Beast', name: 'Giant Badger', cr: 0.25 },
+    { type: 'Beast', name: 'Elk', cr: 0.25 },
+    { type: 'Beast', name: 'Dimetrodon', cr: 0.25 },
+    { type: 'Beast', name: 'Constrictor Snake', cr: 0.25 },
+    { type: 'Beast', name: 'Cave Badger', cr: 0.25 },
+    { type: 'Beast', name: 'Boar', cr: 0.25 },
+
+  ];
+
+  function summonCreatures() {
+    const selectedType = document.getElementById('creatureType').value;
+    const numberOfCreatures = parseInt(document.getElementById('numberOfCreatures').value);
+
+    const selectedCreatures = creatures.filter(creature => creature.type === selectedType);
+    let summoned = [];
+
+    // Calculate CR target based on the number of creatures
+    const crTarget = 2 / numberOfCreatures;
+
+    for (let i = 0; i < numberOfCreatures; i++) {
+      // Filter creatures of CR that add up to the target CR
+      const validChoices = selectedCreatures.filter(creature => creature.cr === crTarget);
+      const randomCreature = validChoices[Math.floor(Math.random() * validChoices.length)];
+      summoned.push(randomCreature);
+    }
+
+    displaySummonedCreatures(summoned);
+  }
+
+  function displaySummonedCreatures(creatures) {
+    const resultList = document.getElementById('summonedResults');
+    resultList.innerHTML = ''; // Clear previous results
+
+    creatures.forEach(creature => {
+      const listItem = document.createElement('li');
+      listItem.textContent = creature.name;
+      resultList.appendChild(listItem);
+    });
+  }
+</script>
+</body>
+</html>
